@@ -1,8 +1,3 @@
-# hello-world
-interesting
-
-code start:
-
 /**
   ******************************************************************************
   * @file    Sending commands to the STM32F4 Discovery via USART using a USB to TTL Uart Serial converter
@@ -78,7 +73,7 @@ void ConfigureUsart(int baudrate){
 	GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	//Connect the TX and RX pins to their alternate function pins
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_USART1); // jannab error due to this piece of shit
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_USART1); //
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_USART1);
 
 	//configure USART
@@ -195,4 +190,3 @@ void Delay(int nCount) {
   while(nCount--) {
   }
 }
-
