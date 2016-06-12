@@ -162,27 +162,6 @@ void USART1_IRQHandler(void){
 				USARTCommandReceived(received_buffer);
 				
 			}
-			if(t == 119){ // detect "w"
-				
-				GPIOD->BSRRH = ((1 <<  1) );
-				USARTCommandReceived(received_buffer);
-				
-			}	
-			if(t == 115){// detect "s"
-				GPIOD->BSRRL = ((1 <<  1) );
-				USARTCommandReceived(received_buffer);
-				
-			}
-			if(t == 97){// detect "a"
-				GPIOD->BSRRH = ((1 <<  3) );
-				USARTCommandReceived(received_buffer);
-				
-			}
-			if(t == 100){// detect "d"
-				GPIOD->BSRRH = ((1 <<  4) );
-				USARTCommandReceived(received_buffer);
-				
-			}
 			
 			
 			
@@ -200,6 +179,10 @@ void USARTCommandReceived(char * command){
 	SendData(USART1, received_buffer);
 
 	if        (compare(command, "L5ON") == 0){
+		
+		GPIOD->BSRRH = ((1 <<  1) );
+		GPIOD->BSRRH = ((1 <<  3) );
+		GPIOD->BSRRH = ((1 <<  4) );
 		STM_EVAL_LEDOn(LED5);
 
 		
