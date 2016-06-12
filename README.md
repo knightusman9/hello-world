@@ -12,7 +12,9 @@
   ******************************************************************************
   */
 
-#include <stm32f4xx.h>
+
+#include <stm32f4xx.h>            
+
 #include <stdio.h>
 #include <stm32f4xx_conf.h>
 #include <stm32f4xx_exti.h>
@@ -48,7 +50,7 @@ static uint8_t DataReceivedCounter = 0; //tracks the number of characters receiv
 
 //function prototypes
 void USARTCommandReceived(char * command);
-void ClearCommand();
+void ClearCommand(void);
 void Delay(int nCount);
 void ConfigureUsart(int baudrate);
 
@@ -110,6 +112,17 @@ void SendData(USART_TypeDef* USARTx, volatile char *s){
 }
 
 int main(void) {
+	
+	SystemCoreClockUpdate();             // Get Core Clock Frequency 
+	RCC->AHB1ENR  |= (1 <<  3) ;         // Enable GPIOD clock
+	GPIOD->MODER   =   0x55555555;       // Setting Direction of Port D
+	GPIOD->OTYPER  =   0x00000000; 			 // To configure the output type of Port D
+	GPIOD->OSPEEDR =   0xAAAAAAAA;       // To configure the speed of Port D 
+	GPIOD->PUPDR   =   0x00000000;       // To configure the Port D Pull-up or Pull-down
+
+	
+	
+	
 	STM_EVAL_LEDInit(LED3);
 	STM_EVAL_LEDInit(LED4);
 	STM_EVAL_LEDInit(LED5);
@@ -119,6 +132,9 @@ int main(void) {
   SendData(USART1, "tecsploits USART connection initialised, visit us @tecsploit.com");
 
   while (1){
+		
+		
+		
 	  Delay(900000);
   }
 }
@@ -135,7 +151,7 @@ void USART1_IRQHandler(void){
 	if( USART_GetITStatus(USART1, USART_IT_RXNE) ){
 		char t = USART1->DR; //Read the character that we have received
 
-		if( (DataReceivedCounter < BUFFER_SIZE) && t != 13 ){
+		if( (DataReceivedCounter < BUFFER_SIZE) && t != 13 && t != 119 && t != 115 && t != 97 && t != 100 ){
 			received_buffer[DataReceivedCounter] = t;
 			DataReceivedCounter++;
 		}
@@ -144,8 +160,34 @@ void USART1_IRQHandler(void){
 			//only raise a command event if the enter key was pressed otherwise just clear
 			if(t == 13){
 				USARTCommandReceived(received_buffer);
+				
 			}
-
+			if(t == 119){ // detect "w"
+				
+				GPIOD->BSRRH = ((1 <<  1) );
+				USARTCommandReceived(received_buffer);
+				
+			}	
+			if(t == 115){// detect "s"
+				GPIOD->BSRRL = ((1 <<  1) );
+				USARTCommandReceived(received_buffer);
+				
+			}
+			if(t == 97){// detect "a"
+				GPIOD->BSRRH = ((1 <<  3) );
+				USARTCommandReceived(received_buffer);
+				
+			}
+			if(t == 100){// detect "d"
+				GPIOD->BSRRH = ((1 <<  4) );
+				USARTCommandReceived(received_buffer);
+				
+			}
+			
+			
+			
+			
+			
 			ClearCommand();
 
 		}
@@ -159,6 +201,8 @@ void USARTCommandReceived(char * command){
 
 	if        (compare(command, "L5ON") == 0){
 		STM_EVAL_LEDOn(LED5);
+
+		
 	}else 	if(compare(command, "L5OFF") == 0){
 		STM_EVAL_LEDOff(LED5);
 
