@@ -9,7 +9,7 @@
 
 #include <Servo.h>
 
-Servo myservo;// create servo object to control a servo
+Servo lowerfootl;// create servo object to control a servo
 // twelve servo objects can be created on most boards
 Servo lowerfootr;
 Servo upperfootl;
@@ -24,7 +24,7 @@ Servo kneer;
 int pos = 0;    // variable to store the servo position
 
 void setup() {
-  myservo.attach(6); // attaches the servo on pin 9 to the servo object
+  lowerfootl.attach(6); // attaches the servo on pin 9 to the servo object
 lowerfootr.attach(11);
 upperfootr.attach(10);
 upperfootl.attach(5);
@@ -38,29 +38,71 @@ kneer.attach(9);
 
 void loop() {
 
+straight();
+delay(1000);
+stand();
+delay(1000);
+
+extendforward();
+delay(1000);
+extendbackward();  
+delay(1000);  
+}
+
+
+void stand(){
 upperhipr.write(40);
 upperhipl.write(70);
+kneer.write(140);
+kneel.write(10);
+lowerhipl.write(170);
+lowerhipr.write(60);
+upperfootr.write(30);
+upperfootl.write(100);
+lowerfootl.write(60);
+lowerfootr.write(90);
+}
+  
+void straight(){
+upperhipr.write(40);
+upperhipl.write(65);
 kneer.write(60);
 kneel.write(60);
-  for (pos = 0; pos <= 180; pos += 5) { // goes from 0 degrees to 180 degrees
-    // in steps of 1 degree
-    // tell servo to go to position in variable 'pos'
-    lowerhipl.write(pos);
-   lowerhipr.write(pos);
-    delay(75);                       // waits 15ms for the servo to reach the position
-  }
-  for (pos = 180; pos >= 0; pos -= 5) { // goes from 180 degrees to 0 degrees
-    lowerhipl.write(pos);
-    lowerhipr.write(pos);
-    
-    delay(75);                       // waits 15ms for the servo to reach the position
-  }
-
-
-
-
-
-
-
+lowerhipl.write(110);
+lowerhipr.write(110);
+upperfootr.write(60);
+upperfootl.write(70);
+lowerfootl.write(80);
+lowerfootr.write(90);
   
 }
+void extendforward(){
+upperhipr.write(40);
+upperhipl.write(70);
+kneer.write(20);
+kneel.write(120);
+lowerhipl.write(170);
+lowerhipr.write(60);
+upperfootr.write(30);
+upperfootl.write(100);
+lowerfootl.write(60);
+lowerfootr.write(90);
+}
+void extendbackward(){
+upperhipr.write(40);
+upperhipl.write(70);
+kneer.write(110);
+kneel.write(30);
+lowerhipl.write(40);
+lowerhipr.write(160);
+upperfootr.write(60);
+upperfootl.write(60);
+lowerfootl.write(60);
+lowerfootr.write(90);
+}
+
+
+
+
+
+
