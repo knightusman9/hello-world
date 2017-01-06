@@ -17,7 +17,7 @@ end encoder;
 
 		
 architecture system of encoder is
-type state_type is (A,B,C,DD,E,F);
+type state_type is (A,B,C,DD,E);
 signal state: state_type;
 signal h: std_LOGIC_VECTOR(7 downto 1);
 signal d: std_LOGIC_VECTOR (3 downto 0);
@@ -29,13 +29,7 @@ signal p4 : std_LOGIC;
 signal c1: std_LOGIC;
 signal c2: std_LOGIC;
 signal c4: std_LOGIC;
-signal h1: std_LOGIC;
-signal h2: std_LOGIC;
-signal h3: std_LOGIC;
-signal h4: std_LOGIC;
-signal h5: std_LOGIC;
-signal h6: std_LOGIC;
-signal h7: std_LOGIC;
+
 
 type arr is array (0 to 11) of integer;
 constant sumarr: arr:= (2,7,4,3,2,5,2,6,1,4,3,1);
@@ -143,20 +137,21 @@ elsif rising_edge(clk) then
 		
 		
 		
-		h1<=p1; --The parity bits found out in the above process block
-	   h2<=p2; -- are put in a register 'h'(declared as signal). 
-		h3<=d(0);
-		h4<=p4;
-		h5<=d(1);
-		h6<=d(2);
-		h7<=d(3);
-		
-		
-		
-		
+		h(1)<=p1; --The parity bits found out in the above process block
+	   h(2)<=p2; -- are put in a register 'h'(declared as signal). 
+		h(3)<=d(0);
+		h(4)<=p4;
+		h(5)<=d(1);
+		h(6)<=d(2);
+		h(7)<=d(3);
+	
 		if error='1' then
+		
 		state<=DD;
+		
 		elsif error='0' then
+		
+	
 		state<=E;
 		end if;
 		
@@ -167,13 +162,33 @@ elsif rising_edge(clk) then
 		i:=i+1;
 		state<= DD;
 		elsif error='0' then
-		h(sumarr(i))<= not h(sumarr(i));
+		
 		state<=E;
 		end if;
 		
 		
 		
 		when E=>
+		
+		
+		h(1)<=p1; --The parity bits found out in the above process block
+	   h(2)<=p2; -- are put in a register 'h'(declared as signal). 
+		h(3)<=d(0);
+		h(4)<=p4;
+		h(5)<=d(1);
+		h(6)<=d(2);
+		h(7)<=d(3);
+		
+		
+		
+		
+		
+		if i = 0 then
+		h(sumarr(i))<= h(sumarr(i));
+		else 
+		h(sumarr(i))<= not h(sumarr(i));
+		end if;
+		
 		
 		 -- Parity bits are found here. 
 		if 	h(1)='0' and h(3)='0' and h(5)='0' and h(7)='0'  then
@@ -382,23 +397,20 @@ elsif rising_edge(clk) then
 		code(7)<= not h(7);
 		
 		end if;
+				
+		dataout(0)<= code(3);
+		dataout(1)<= code(5);
+		dataout(2)<= code(6);
+		dataout(3)<= code(7);
 		
-		state<= F;
-		
-		when F=>
-		
-		dataout(0)<= h3;
-		dataout(1)<= h5;
-		dataout(2)<= h6;
-		dataout(3)<= h7;
-		codef(0)<=p1;
-		codef(1)<=p2;
-		codef(2)<=h3;
-		codef(3)<=p4;
-		codef(4)<=h5;
-		codef(5)<=h6;
-		codef(6)<=h7;
-		
+		codef(0)<=code(1);
+		codef(1)<=code(2);
+		codef(2)<=code(3);
+		codef(3)<=code(4);
+		codef(4)<=code(5);
+		codef(5)<=code(6);
+		codef(6)<=code(7);
+				
 	end case;
 	end if;	
 end process;
